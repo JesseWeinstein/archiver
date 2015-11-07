@@ -83,18 +83,15 @@ class Paragraph:
     def output(self):
         result = '<!-- {} -->\n'.format(self.number)
         if self.style == 'editorial-intro-paragraph':
-            result += '<p class="editorial-intro">\n'
+            wrapper = '<p clas="editorial-intro">\n{}\n</p>'
         elif self.style == 'blockquote':
-            result += '<blockquote>\n<p>\n'
+            wrapper = '<blockquote>\n<p>\n{}\n</p>\n</blockquote>'
         elif self.style == 'alt-voice-paragraph':
-            result += '<p class="alternate-voice">\n'
-        result += self.content
-        if self.style == 'editorial-intro-paragraph':
-            result += '\n</p>'
-        elif self.style == 'blockquote':
-            result += '\n</p>\n</blockquote>'
-        elif self.style == 'alt-voice-paragraph':
-            result += '\n</p>'
+            wrapper = '<p class="alternate-voice">\n{}\n</p>'
+        else:
+            wrapper = '<p>\n{}\n</p>'
+
+        result += wrapper.format(self.content)
 
         return result
 
