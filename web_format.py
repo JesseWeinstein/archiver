@@ -60,7 +60,7 @@ class Article:
             pass
         os.chdir(self.short_reference)
 
-        f = open('web_content.markdown', 'w')
+        f = open('web_content.html', 'w')
         for element in self.contents:
             f.write(element.output())
             f.write('\n\n')
