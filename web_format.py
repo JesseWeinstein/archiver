@@ -64,7 +64,20 @@ class Article:
         for element in self.contents:
             f.write(element.output())
             f.write('\n\n')
+        f.close()
 
+        f = open('metadata.yml', 'w')
+        f.write('---\n')
+        f.write('layout: article\n')
+        f.write('title: {}\n'.format(self.title))
+        f.write('authors:\n')
+        f.write('excerpt: >\n')
+        f.write('\t{}\n'.format(self.excerpt))
+        f.write('permalink: \n')
+        f.write('toc: {}\n'.format(self.toc))
+        f.write('volume: {}\n'.format(self.volume))
+        f.write('number: {}\n'.format(self.number))
+        f.write('---\n')
         f.close()
 
 
