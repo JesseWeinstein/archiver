@@ -121,16 +121,16 @@ class ImageGallery:
     def output(self):
         result = '<ul class="image-gallery"><!--'
         for image in self.images:
-            result += '<li data-caption="{}" data-credit="{}">'.format(
+            result += '--><li data-caption="{}" data-credit="{}">'.format(
                 image.caption, image.credit)
-            result += '<a href="lightbox" \
-            href="/images/issues/{}/{}/large-{}">'.format(
-                self.article.volume, self.article.number,
-                image.url_template)
-            result += '<img src="/images/issues/{}/{}/medium-{}" \
-            width="640" alt="{}" />'.format(
-                self.article.volume, self.article.number,
-                image.url_template, image.alt)
+            result += '<a href="lightbox" ' + \
+                'href="/images/issues/{}/{}/large-{}">'.format(
+                    self.article.volume, self.article.number,
+                    image.url_template)
+            result += '<img src="/images/issues/{}/{}/medium-{}" ' + \
+                'width="640" alt="{}" />'.format(
+                    self.article.volume, self.article.number,
+                    image.url_template, image.alt)
             result += '</a></li><!--'
 
         result += '--></ul>'
