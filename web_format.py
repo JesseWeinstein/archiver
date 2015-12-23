@@ -127,10 +127,9 @@ class ImageGallery:
                 'href="/images/issues/{}/{}/large-{}">'.format(
                     self.article.volume, self.article.number,
                     image.url_template)
-            result += '<img src="/images/issues/{}/{}/medium-{}" ' + \
-                'width="640" alt="{}" />'.format(
-                    self.article.volume, self.article.number,
-                    image.url_template, image.alt)
+            result += '<img src="/images/issues/{}/{}/medium-{}" ' \
+                .format(self.article.volume, self.article.number, image.url_template) + \
+                'width="640" alt="{}" />'.format(image.alt)
             result += '</a></li><!--'
 
         result += '--></ul>'
@@ -146,9 +145,12 @@ class Image:
     credit = None
 
     def __init__(self, data, article):
-        self.alt = data['alt']
-        self.caption = markdown.markdown(data['caption'])[3:-4]
-        self.credit = markdown.markdown(data['credit'])[3:-4]
+        if 'alt' in data:
+            self.alt = data['alt']
+        if 'caption' in data:
+            self.caption = markdown.markdown(data['caption'])[3:-4]
+        if 'credit' in data:
+            self.credit = markdown.markdown(data['credit'])[3:-4]
 
         self.url_template = re.split('/', data['url-format'])[-1]
 
@@ -166,11 +168,15 @@ class Image:
             .format(self.article.volume, self.article.number,
                     self.url_template, self.alt)
         result += '</a>\n'
-        if len(self.caption) > 0 or len(self.credit) > 0:
+
+        caption_condition = self.caption and len(self.caption) > 0
+        credit_condition = self.credit and len(self.credit) > 0
+
+        if caption_condition or credit_condition:
             result += '<p class="caption">\n'
-            if len(self.caption) > 0:
+            if caption_condition:
                 result += self.caption + '\n'
-            if len(self.credit) > 0:
+            if credit_condition:
                 result += \
                     '<span class="credit">{}</span>\n'.format(self.credit)
             result += '</p>\n'
