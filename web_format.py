@@ -18,6 +18,7 @@ class Article:
     volume = None
     number = None
     toc = None
+    chapter = None
     excerpt = None
     contents = []
     supernotes = []
@@ -31,6 +32,8 @@ class Article:
             self.authors = []
         self.short_reference = file.content['metadata']['short-reference']
         self.toc = file.content['metadata']['position']
+        if 'chapter' in file.content['metadata']:
+            self.chapter = file.content['metadata']['chapter']
         if 'summary' in file.content['metadata']:
             self.excerpt = file.content['metadata']['summary']
         self.volume = volume
@@ -79,6 +82,8 @@ class Article:
         f.write('\t{}\n'.format(self.excerpt))
         f.write('permalink: \n')
         f.write('toc: {}\n'.format(self.toc))
+        if self.chapter:
+            f.write('chapter: {}\n'.format(self.chapter))
         f.write('volume: {}\n'.format(self.volume))
         f.write('number: {}\n'.format(self.number))
         f.write('---\n')
