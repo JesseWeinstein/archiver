@@ -25,7 +25,10 @@ class Article:
     def __init__(self, file, volume, number):
         self.contents = []
         self.title = file.content['metadata']['title']
-        self.authors = file.content['metadata']['author']
+        if 'author' in file.content['metadata']:
+            self.authors = file.content['metadata']['author']
+        else:
+            self.authors = []
         self.short_reference = file.content['metadata']['short-reference']
         self.toc = file.content['metadata']['position']
         self.excerpt = file.content['metadata']['summary']
