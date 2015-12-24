@@ -31,7 +31,8 @@ class Article:
             self.authors = []
         self.short_reference = file.content['metadata']['short-reference']
         self.toc = file.content['metadata']['position']
-        self.excerpt = file.content['metadata']['summary']
+        if 'summary' in file.content['metadata']:
+            self.excerpt = file.content['metadata']['summary']
         self.volume = volume
         self.number = number
 
@@ -241,7 +242,10 @@ class ContentFile:
 
 if __name__ == '__main__':
     content_files = []
-    skipped_names = ['contributors', 'cover.jpg', 'bundle.json']
+    skipped_names = [
+        'contributors', 'cover.jpg', 'bundle.json',
+        'cover-chapter-1.jpg', 'cover-chapter-2.jpg',
+        'cover-chapter-3.jpg']
     issue = None
     number = None
 
