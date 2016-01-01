@@ -124,6 +124,7 @@ class ImageGallery:
 
     def __init__(self, data, article):
         self.article = article
+        self.images = []
         for image in data['images']:
             self.images.append(Image(image, self.article))
 
