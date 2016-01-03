@@ -105,7 +105,7 @@ class Paragraph:
     def output(self):
         result = '<!-- {} -->\n'.format(self.number)
         if self.style == 'editorial-intro-paragraph':
-            wrapper = '<p clas="editorial-intro">\n{}\n</p>'
+            wrapper = '<p class="editorial-intro">\n{}\n</p>'
         elif self.style == 'blockquote':
             wrapper = '<blockquote>\n<p>\n{}\n</p>\n</blockquote>'
         elif self.style == 'alt-voice-paragraph':
