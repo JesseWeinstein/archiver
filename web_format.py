@@ -133,13 +133,13 @@ class ImageGallery:
         for image in self.images:
             result += '--><li data-caption="{}" data-credit="{}">'.format(
                 image.caption, image.credit)
-            result += '<a href="lightbox" ' + \
+            result += '<a class="lightbox" ' + \
                 'href="/images/issues/{}/{}/large-{}">'.format(
                     self.article.volume, self.article.number,
                     image.url_template)
-            result += '<img src="/images/issues/{}/{}/medium-{}" ' \
+            result += '<img src="/images/issues/{}/{}/thumb-{}" ' \
                 .format(self.article.volume, self.article.number, image.url_template) + \
-                'width="640" alt="{}" />'.format(image.alt)
+                'width="100" alt="{}" />'.format(image.alt)
             result += '</a></li><!--'
 
         result += '--></ul>'
