@@ -153,6 +153,7 @@ class Image:
     alt = None
     caption = None
     credit = None
+    float_left = None
 
     def __init__(self, data, article):
         if 'alt' in data:
@@ -161,20 +162,26 @@ class Image:
             self.caption = markdown.markdown(data['caption'])[3:-4]
         if 'credit' in data:
             self.credit = markdown.markdown(data['credit'])[3:-4]
+        if 'float' in data:
+            self.float_left = True
 
         self.url_template = re.split('/', data['url-format'])[-1]
 
         self.article = article
 
     def output(self):
-        result = '<div class="inline-image">\n'
+        if self.float_left:
+            result = '<div class="float-image left">'
+        else:
+            result = '<div class="inline-image">\n'
+
         result += \
             '<a rel="lightbox" href="/images/issues/{}/{}/large-{}">\n' \
             .format(self.article.volume, self.article.number,
                     self.url_template)
         result += \
-            '<img src="/images/issues/{}/{}/medium-{}"' \
-            'width="640" alt="{}" />\n' \
+            '<img src="/images/issues/{}/{}/medium-{}" ' \
+            'alt="{}" />\n' \
             .format(self.article.volume, self.article.number,
                     self.url_template, self.alt)
         result += '</a>\n'
