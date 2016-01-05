@@ -52,6 +52,8 @@ class Article:
                 self.contents.append(Header(element, self))
             elif element['type'] == 'anvil-gallery':
                 self.contents.append(ImageGallery(element, self))
+            elif element['type'] == 'audio':
+                self.contents.append(Audio(element, self))
 
     def output(self):
         issue_directory = "issue-{}-{}".format(self.volume, self.number)
@@ -114,6 +116,24 @@ class Paragraph:
             wrapper = '<p>\n{}\n</p>'
 
         result += wrapper.format(self.content)
+
+        return result
+
+
+class Audio:
+    article = None
+
+    def __init__(self, data, article):
+        self.article = article
+        self.url = data['url'][45:]
+        self.label = data['label']
+
+    def output(self):
+        result = '<div class="inline-audio">'
+        result += '<a href="/audio{}" class="sm2_button">{}</a>' \
+            .format(self.url, self.label)
+        result += '<p class="label">{}</p>'.format(self.label)
+        result += '</div>'
 
         return result
 
