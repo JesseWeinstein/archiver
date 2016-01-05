@@ -120,11 +120,13 @@ class Paragraph:
 
 class ImageGallery:
     article = None
+    group_id = None
     images = []
 
     def __init__(self, data, article):
         self.article = article
         self.images = []
+        self.group = data['group']
         for image in data['images']:
             self.images.append(Image(image, self.article))
 
@@ -133,7 +135,8 @@ class ImageGallery:
         for image in self.images:
             result += '--><li data-caption="{}" data-credit="{}">'.format(
                 image.caption, image.credit)
-            result += '<a class="lightbox" ' + \
+            result += '<a class="fancybox" rel="{}" '.format(self.group) + \
+                'title="{}<span class=\'credit\'>{}</span>" '.format(image.caption, image.credit) + \
                 'href="/images/issues/{}/{}/large-{}">'.format(
                     self.article.volume, self.article.number,
                     image.url_template)
@@ -176,7 +179,7 @@ class Image:
             result = '<div class="inline-image">\n'
 
         result += \
-            '<a rel="lightbox" href="/images/issues/{}/{}/large-{}">\n' \
+            '<a class="fancybox" href="/images/issues/{}/{}/large-{}">\n' \
             .format(self.article.volume, self.article.number,
                     self.url_template)
         result += \
