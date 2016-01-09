@@ -54,6 +54,8 @@ class Article:
                 self.contents.append(ImageGallery(element, self))
             elif element['type'] == 'audio':
                 self.contents.append(Audio(element, self))
+            elif element['type'] == 'video':
+                self.contents.append(Video(element, self))
 
     def output(self):
         issue_directory = "issue-{}-{}".format(self.volume, self.number)
@@ -134,6 +136,33 @@ class Audio:
             .format(self.url, self.label)
         result += '<p class="label">{}</p>'.format(self.label)
         result += '</div>'
+
+        return result
+
+
+class Video:
+    article = None
+
+    def __init__(self, data, article):
+        self.article = article
+        self.video_id = data['id']
+        self.width = data['width']
+        self.height = data['height']
+        if 'caption' in data:
+            self.caption = data['caption']
+        else:
+            self.caption = None
+
+    def output(self):
+        result = '<div class="inline-video">\n'
+        result += '<iframe width="{}" height="{}" ' \
+            .format(self.width, self.height)
+        result += 'src="https://www.youtube.com/embed/{}'.format(self.video_id)
+        result += '?rel=0&amp;showinfo=0" frameborder="0" '
+        result += 'allowfullscreen></iframe>\n'
+        if self.caption and len(self.caption) > 0:
+            result += '<p class="caption">{}</p>\n'.format(self.caption)
+        result += '</div>\n'
 
         return result
 
