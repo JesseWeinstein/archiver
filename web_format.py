@@ -56,6 +56,8 @@ class Article:
                 self.contents.append(Audio(element, self))
             elif element['type'] == 'video':
                 self.contents.append(Video(element, self))
+            elif element['type'] == 'table':
+                self.contents.append(Table(element, self))
 
     def output(self):
         issue_directory = "issue-{}-{}".format(self.volume, self.number)
@@ -163,6 +165,50 @@ class Video:
         if self.caption and len(self.caption) > 0:
             result += '<p class="caption">{}</p>\n'.format(self.caption)
         result += '</div>\n'
+
+        return result
+
+
+class Table:
+    article = None
+
+    def __init__(self, data, article):
+        self.article = article
+        self.title = data['title']
+        self.contents = data['contents']
+
+    def output(self):
+        result = '<table>\n'
+        result += '<caption>{}</caption>\n'.format(self.title)
+        result += '<tbody>\n'
+        first_row = True
+        for row in self.contents:
+            result += '<tr>\n'
+
+            if first_row:
+                cell_label = 'th'
+                first_row = False
+            else:
+                cell_label = 'td'
+
+            first_cell = True
+            for cell in row:
+                if first_cell:
+                    cell_class = ' class="special"'
+                else:
+                    cell_class = ''
+
+                result += '<{}{}>{}</{}>\n'.format(
+                    cell_label,
+                    cell_class,
+                    cell,
+                    cell_label)
+                first_cell = False
+
+            result += '</tr>\n'
+
+        result += '</tbody>\n'
+        result += '</table>\n'
 
         return result
 
