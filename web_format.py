@@ -42,7 +42,8 @@ class Article:
         for element in file.content['content']:
             if element['type'] in \
                 ['paragraph', 'editorial-intro-paragraph',
-                    'alt-voice-paragraph', 'blockquote']:
+                    'alt-voice-paragraph', 'blockquote',
+                    'stage-direction-paragraph']:
                 self.contents.append(Paragraph(element, self))
             elif element['type'] == 'image':
                 self.contents.append(Image(element, self))
@@ -116,6 +117,8 @@ class Paragraph:
             wrapper = '<blockquote>\n<p>\n{}\n</p>\n</blockquote>'
         elif self.style == 'alt-voice-paragraph':
             wrapper = '<p class="alternate-voice">\n{}\n</p>'
+        elif self.style == 'stage-direction-paragraph':
+            wrapper = '<p class="stage-direction">\n{}\n</p>'
         else:
             wrapper = '<p>\n{}\n</p>'
 
@@ -130,7 +133,7 @@ class Audio:
     def __init__(self, data, article):
         self.article = article
         self.url = data['url'][45:]
-        self.label = data['label']
+        self.label = markdown.markdown(data['label'])[3:-4]
 
     def output(self):
         result = '<div class="inline-audio">'
@@ -151,7 +154,7 @@ class Video:
         self.width = data['width']
         self.height = data['height']
         if 'caption' in data:
-            self.caption = data['caption']
+            self.caption = markdown.markdown(data['caption'])[3:-4]
         else:
             self.caption = None
 
