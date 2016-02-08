@@ -255,6 +255,7 @@ class Image:
     caption = None
     credit = None
     float_left = None
+    alt_voice = None
 
     def __init__(self, data, article):
         if 'alt' in data:
@@ -265,6 +266,8 @@ class Image:
             self.credit = markdown.markdown(data['credit'])[3:-4]
         if 'float' in data:
             self.float_left = True
+        if 'alt-voice' in data:
+            self.alt_voice = True
 
         self.url_template = re.split('/', data['url-format'])[-1]
 
@@ -273,6 +276,8 @@ class Image:
     def output(self):
         if self.float_left:
             result = '<div class="float-image left">'
+        elif self.alt_voice:
+            result = '<div class="alternate-voice inline-image">'
         else:
             result = '<div class="inline-image">\n'
 
