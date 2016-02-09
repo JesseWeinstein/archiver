@@ -39,6 +39,7 @@ class Article:
         self.volume = volume
         self.number = number
 
+        map_counter = 0
         for element in file.content['content']:
             if element['type'] in \
                 ['paragraph', 'editorial-intro-paragraph',
@@ -59,6 +60,9 @@ class Article:
                 self.contents.append(Video(element, self))
             elif element['type'] == 'table':
                 self.contents.append(Table(element, self))
+            elif element['type'] == 'map':
+                self.contents.append(Map(element, map_counter, self))
+                map_counter += 1
 
     def output(self):
         issue_directory = "issue-{}-{}".format(self.volume, self.number)
@@ -168,6 +172,71 @@ class Video:
         if self.caption and len(self.caption) > 0:
             result += '<p class="caption">{}</p>\n'.format(self.caption)
         result += '</div>\n'
+
+        return result
+
+
+class Map:
+    article = None
+    id = None
+    tileset = None
+    center = None
+    zoom = None
+    minZoom = None
+    maxZoom = None
+    markers = None
+
+    def __init__(self, data, id, article):
+        self.article = article
+        self.id = id
+        self.tileset = data['tileset']
+        self.center = (data['center'][0], data['center'][1])
+        self.zoom = data['zoom']
+        self.minZoom = data['minZoom']
+        self.maxZoom = data['maxZoom']
+        self.markers = data['markers']
+
+    def map_initialization(self):
+        result = 'var leaflet_map_id_{} = "map-container-{}";\n' \
+            .format(self.id, self.id)
+        result += 'var leaflet_layer_{} = new L.StamenTileLayer("{}");\n' \
+            .format(self.id, self.tileset)
+        result += 'var leaflet_map_{} = L.map(leaflet_map_id_{}, {{\n' \
+            .format(self.id, self.id)
+        result += 'center: new L.LatLng({}, {}), ' \
+            .format(self.center[0], self.center[1])
+        result += 'zoom: {}, '.format(self.zoom)
+        result += 'minZoom: {}, '.format(self.minZoom)
+        result += 'maxZoom: {}'.format(self.maxZoom)
+        result += '});\n'
+
+        result += "leaflet_map_{}.attributionControl.addAttribution(" \
+            "'Map tiles by <a href=\"http://stamen.com\">Stamen Design</a>, " \
+            "under <a href=\"http://creativecommons.org/licenses/by/3.0\">" \
+            "CC BY 3.0</a>. Data by <a href=\"http://openstreetmap.org\">" \
+            "OpenStreetMap</a>, under <a href=\"http://creativecommons.org/" \
+            "licenses/by-sa/3.0\">CC BY SA</a>.');\n".format(self.id)
+
+        result += 'leaflet_map_{}.addLayer(leaflet_layer_{});\n' \
+            .format(self.id, self.id)
+
+        return result
+
+    def output(self):
+        result = '<div id="map-container-{}" class="inline-leaflet-map" \
+                    ></div>\n'.format(self.id)
+        result += '<script type=\"text/javascript\">\n'
+        result += "$(document).on('ready', function() {\n"
+        result += self.map_initialization()
+        for mm in self.markers:
+            result += 'L.marker([{},{}]).addTo(leaflet_map_{})' \
+                      '.bindPopup("{}");\n' \
+                      .format(mm['position']['latitude'],
+                              mm['position']['longitude'],
+                              self.id,
+                              mm['message'])
+        result += '});\n'
+        result += '</script>\n\n'
 
         return result
 
