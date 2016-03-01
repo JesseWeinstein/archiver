@@ -106,27 +106,37 @@ class Paragraph:
     content = None
     number = None
     style = None
+    internal_links = None
 
     def __init__(self, data, article):
         self.content = markdown.markdown(data['content'])[3:-4]
         self.number = int(data['number'])
         self.article = article
         self.style = data['type']
+        if 'internal-links' in data:
+            self.internal_links = data['internal-links']
 
     def output(self):
         result = '<!-- {} -->\n'.format(self.number)
         if self.style == 'editorial-intro-paragraph':
-            wrapper = '<p class="editorial-intro">\n{}\n</p>'
+            wrapper = '<p id="paragraph-{}" class="editorial-intro">\n{}\n</p>'
         elif self.style == 'blockquote':
-            wrapper = '<blockquote>\n<p>\n{}\n</p>\n</blockquote>'
+            wrapper = '<blockquote id="paragraph-{}">\n<p>\n{}\n</p>\n' \
+                '</blockquote>'
         elif self.style == 'alt-voice-paragraph':
-            wrapper = '<p class="alternate-voice">\n{}\n</p>'
+            wrapper = '<p id="paragraph-{}" class="alternate-voice">\n{}\n</p>'
         elif self.style == 'stage-direction-paragraph':
-            wrapper = '<p class="stage-direction">\n{}\n</p>'
+            wrapper = '<p id="paragraph-{}" class="stage-direction">\n{}\n</p>'
         else:
-            wrapper = '<p>\n{}\n</p>'
+            wrapper = '<p id="paragraph-{}">\n{}\n</p>'
 
-        result += wrapper.format(self.content)
+        result += wrapper.format(self.number, self.content)
+
+        if self.internal_links:
+            for internal_link in self.internal_links:
+                result = result.replace(
+                    internal_link['token'],
+                    internal_link['web'])
 
         return result
 
