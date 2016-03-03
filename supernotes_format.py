@@ -84,6 +84,7 @@ class Paragraph:
         """
         self.number = number
         self.collection = collection
+        self.notes = []
 
         ordered_keys = [['commentary', CommentarySet],
                         ['citation', CitationSet],
