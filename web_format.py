@@ -130,6 +130,8 @@ class Paragraph:
         else:
             wrapper = '<p id="paragraph-{}">\n{}\n</p>'
 
+        wrapper = '<div class="paragraph-pack">{}</div>'.format(wrapper)
+        
         result += wrapper.format(self.number, self.content)
 
         if self.internal_links:
